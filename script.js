@@ -1,10 +1,8 @@
-//====================================================
+//==========================================
 // El Niño Dashboard
-// Google Apps Script JSON Version
-//====================================================
+//==========================================
 
-const apiURL =
-"https://script.google.com/macros/s/AKfycbwk2TtKwzNSW50aJAFPrtB5MfJq62d-ijHlShWQMJ83zLfossaIh47rCqttrz3beG232w/exec";
+const apiURL = "https://script.google.com/macros/s/AKfycbwk2TtKwzNSW50aJAFPrtB5MfJq62d-ijHlShWQMJ83zLfossaIh47rCqttrz3beG232w/exec";
 
 let advisoryData = [];
 
@@ -12,108 +10,102 @@ const stateSelect = document.getElementById("state");
 const districtSelect = document.getElementById("district");
 const messageBox = document.getElementById("message");
 
-//--------------------------------------------
-// Load data
-//--------------------------------------------
+//-----------------------------------
 
 async function loadData(){
 
     try{
 
+        console.log("Loading data...");
+
         const response = await fetch(apiURL);
 
         advisoryData = await response.json();
+
+        console.log("Data Loaded:", advisoryData);
 
         loadStates();
 
     }
 
-    catch(error){
+    catch(err){
 
-        console.error(error);
+        console.error(err);
 
-        messageBox.innerHTML =
-        "Unable to connect to Google Sheet.";
+        messageBox.innerHTML="Unable to load data.";
 
     }
 
 }
 
-//--------------------------------------------
-// Load States
-//--------------------------------------------
+//-----------------------------------
 
 function loadStates(){
 
-    const states =
-    [...new Set(advisoryData.map(item=>item.State))];
+    stateSelect.innerHTML='<option value="">Select State</option>';
 
-    stateSelect.innerHTML =
-    '<option value="">Select State</option>';
+    const states=[...new Set(advisoryData.map(item=>item.State.trim()))];
 
-    states.sort();
+    console.log(states);
 
     states.forEach(state=>{
 
-        stateSelect.innerHTML +=
-        `<option value="${state}">${state}</option>`;
+        let option=document.createElement("option");
+
+        option.value=state;
+
+        option.textContent=state;
+
+        stateSelect.appendChild(option);
 
     });
 
 }
 
-//--------------------------------------------
-// State Changed
-//--------------------------------------------
+//-----------------------------------
 
 stateSelect.addEventListener("change",function(){
 
-    districtSelect.innerHTML =
-    '<option value="">Select District</option>';
+    districtSelect.innerHTML='<option>Select District</option>';
 
-    messageBox.innerHTML =
-    "Please select a district.";
+    messageBox.innerHTML="";
 
-    const districts =
-    advisoryData.filter(item=>item.State===this.value);
+    const districts=advisoryData.filter(item=>item.State.trim()==this.value);
 
     districts.forEach(item=>{
 
-        districtSelect.innerHTML +=
-        `<option value="${item.District}">
-        ${item.District}
-        </option>`;
+        let option=document.createElement("option");
+
+        option.value=item.District;
+
+        option.textContent=item.District;
+
+        districtSelect.appendChild(option);
 
     });
 
 });
 
-//--------------------------------------------
-// District Changed
-//--------------------------------------------
+//-----------------------------------
 
 districtSelect.addEventListener("change",function(){
 
-    const state = stateSelect.value;
+    const row=advisoryData.find(item=>
 
-    const district = this.value;
+        item.State.trim()==stateSelect.value &&
 
-    const record =
-    advisoryData.find(item=>
-
-        item.State===state &&
-        item.District===district
+        item.District.trim()==districtSelect.value
 
     );
 
-    if(record){
+    if(row){
 
-        messageBox.innerHTML = record.Message;
+        messageBox.innerHTML=row.Message;
 
     }
 
 });
 
-//--------------------------------------------
+//-----------------------------------
 
 loadData();
