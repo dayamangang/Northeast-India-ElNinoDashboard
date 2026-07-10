@@ -143,7 +143,13 @@ districtSelect.addEventListener("change", function () {
 
     issueNo.innerHTML = row.Issue_No;
 
-    issueDate.innerHTML = row.Issue_Date;
+    const formattedDate = new Date(row.Issue_Date);
+
+    issueDate.innerHTML = formattedDate.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric"
+    });
 
     preparedBy.innerHTML = row.Prepared_By;
 
