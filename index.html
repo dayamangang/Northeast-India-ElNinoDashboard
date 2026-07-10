@@ -78,24 +78,80 @@
 
 
     <!-- ========================= -->
-    <!-- Information Panel -->
+    <!-- District Information -->
     <!-- ========================= -->
 
-    <section class="message-card">
+     <section class="info-card">
 
-        <div class="card-header">
+       <div class="card-header">
+           District Contingent Plan Information
+       </div>
 
-            District Advisory / Information
+       <table class="info-table">
 
-        </div>
+        <tr>
+            <td><strong>State</strong></td>
+            <td id="infoState">-</td>
+        </tr>
 
-        <div id="message" class="message">
+        <tr>
+            <td><strong>District</strong></td>
+            <td id="infoDistrict">-</td>
+        </tr>
 
-            Please select State and District.
+        <tr>
+            <td><strong>Issue No.</strong></td>
+            <td id="issueNo">-</td>
+        </tr>
 
-        </div>
+        <tr>
+            <td><strong>Issue Date</strong></td>
+            <td id="issueDate">-</td>
+        </tr>
 
-    </section>
+        <tr>
+            <td><strong>Prepared By</strong></td>
+            <td id="preparedBy">-</td>
+        </tr>
+
+    </table>
+
+    <div class="button-group">
+
+        <a id="viewBtn" class="btn" target="_blank">
+            📄 View PDF
+        </a>
+
+        <a id="downloadBtn" class="btn" target="_blank">
+            ⬇ Download PDF
+        </a>
+
+        <button class="btn" onclick="printPDF()">
+            🖨 Print
+        </button>
+
+    </div>
+
+</section>
+
+<!-- ========================= -->
+<!-- PDF Viewer -->
+<!-- ========================= -->
+
+<section class="pdf-card">
+
+    <div class="card-header">
+        District Contingent Plan
+    </div>
+
+    <iframe
+        id="pdfViewer"
+        width="100%"
+        height="850"
+        frameborder="0">
+    </iframe>
+
+</section>
 
 
     <!-- ========================= -->
