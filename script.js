@@ -1,60 +1,81 @@
-//==========================================
-// El Niño Dashboard
-//==========================================
+//==========================================================
+// El Niño Preparedness District Contingent Plan Dashboard
+// Version 2.0
+//==========================================================
 
-const apiURL = "https://script.google.com/macros/s/AKfycbwk2TtKwzNSW50aJAFPrtB5MfJq62d-ijHlShWQMJ83zLfossaIh47rCqttrz3beG232w/exec";
+const apiURL =
+"https://script.google.com/macros/s/AKfycbwk2TtKwzNSW50aJAFPrtB5MfJq62d-ijHlShWQMJ83zLfossaIh47rCqttrz3beG232w/exec";
 
 let advisoryData = [];
 
+//---------------------------------------------
+// HTML Elements
+//---------------------------------------------
+
 const stateSelect = document.getElementById("state");
 const districtSelect = document.getElementById("district");
-const messageBox = document.getElementById("message");
 
-//-----------------------------------
+const infoState = document.getElementById("infoState");
+const infoDistrict = document.getElementById("infoDistrict");
+const issueNo = document.getElementById("issueNo");
+const issueDate = document.getElementById("issueDate");
+const preparedBy = document.getElementById("preparedBy");
 
-async function loadData(){
+const pdfViewer = document.getElementById("pdfViewer");
 
-    try{
+const viewBtn = document.getElementById("viewBtn");
+const downloadBtn = document.getElementById("downloadBtn");
 
-        console.log("Loading data...");
+//---------------------------------------------
+// Load Data
+//---------------------------------------------
+
+async function loadData() {
+
+    try {
 
         const response = await fetch(apiURL);
 
         advisoryData = await response.json();
 
-        console.log("Data Loaded:", advisoryData);
+        console.log(advisoryData);
 
         loadStates();
 
     }
 
-    catch(err){
+    catch (error) {
 
-        console.error(err);
+        console.error(error);
 
-        messageBox.innerHTML="Unable to load data.";
+        alert("Unable to load Google Sheet data.");
 
     }
 
 }
 
-//-----------------------------------
+//---------------------------------------------
+// Load States
+//---------------------------------------------
 
-function loadStates(){
+function loadStates() {
 
-    stateSelect.innerHTML='<option value="">Select State</option>';
+    stateSelect.innerHTML =
+    '<option value="">Select State</option>';
 
-    const states=[...new Set(advisoryData.map(item=>item.State.trim()))];
+    const states =
+    [...new Set(advisoryData.map(item => item.State.trim()))];
 
-    console.log(states);
+    states.sort();
 
-    states.forEach(state=>{
+    states.forEach(state => {
 
-        let option=document.createElement("option");
+        const option =
+        document.createElement("option");
 
-        option.value=state;
+        option.value = state;
 
-        option.textContent=state;
+        option.textContent = state;
 
         stateSelect.appendChild(option);
 
@@ -62,23 +83,32 @@ function loadStates(){
 
 }
 
-//-----------------------------------
+//---------------------------------------------
+// State Changed
+//---------------------------------------------
 
-stateSelect.addEventListener("change",function(){
+stateSelect.addEventListener("change", function () {
 
-    districtSelect.innerHTML='<option>Select District</option>';
+    districtSelect.innerHTML =
+    '<option value="">Select District</option>';
 
-    messageBox.innerHTML="";
+    const districts =
+    advisoryData.filter(item =>
+        item.State.trim() === this.value
+    );
 
-    const districts=advisoryData.filter(item=>item.State.trim()==this.value);
+    districts.sort((a,b)=>
+        a.District.localeCompare(b.District)
+    );
 
-    districts.forEach(item=>{
+    districts.forEach(item => {
 
-        let option=document.createElement("option");
+        const option =
+        document.createElement("option");
 
-        option.value=item.District;
+        option.value = item.District;
 
-        option.textContent=item.District;
+        option.textContent = item.District;
 
         districtSelect.appendChild(option);
 
@@ -86,26 +116,80 @@ stateSelect.addEventListener("change",function(){
 
 });
 
-//-----------------------------------
+//---------------------------------------------
+// District Changed
+//---------------------------------------------
 
-districtSelect.addEventListener("change",function(){
+districtSelect.addEventListener("change", function () {
 
-    const row=advisoryData.find(item=>
+    const row =
+    advisoryData.find(item =>
 
-        item.State.trim()==stateSelect.value &&
-
-        item.District.trim()==districtSelect.value
+        item.State.trim() === stateSelect.value &&
+        item.District.trim() === districtSelect.value
 
     );
 
-    if(row){
+    if (!row) return;
 
-        messageBox.innerHTML=row.Message;
+    //-----------------------------------------
+    // Information
+    //-----------------------------------------
 
-    }
+    infoState.innerHTML = row.State;
+
+    infoDistrict.innerHTML = row.District;
+
+    issueNo.innerHTML = row.Issue_No;
+
+    issueDate.innerHTML = row.Issue_Date;
+
+    preparedBy.innerHTML = row.Prepared_By;
+
+    //-----------------------------------------
+    // Google Drive PDF
+    //-----------------------------------------
+
+    const pdfURL = row.PDF_URL;
+
+    const fileID =
+    pdfURL.match(/\/d\/(.*?)\//)[1];
+
+    //-----------------------------------------
+    // Preview
+    //-----------------------------------------
+
+    pdfViewer.src =
+    "https://drive.google.com/file/d/" +
+    fileID +
+    "/preview";
+
+    //-----------------------------------------
+    // View
+    //-----------------------------------------
+
+    viewBtn.href = pdfURL;
+
+    //-----------------------------------------
+    // Download
+    //-----------------------------------------
+
+    downloadBtn.href =
+    "https://drive.google.com/uc?export=download&id=" +
+    fileID;
 
 });
 
-//-----------------------------------
+//---------------------------------------------
+// Print PDF
+//---------------------------------------------
+
+function printPDF(){
+
+    window.open(viewBtn.href);
+
+}
+
+//---------------------------------------------
 
 loadData();
