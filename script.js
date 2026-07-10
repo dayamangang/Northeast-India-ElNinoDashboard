@@ -39,6 +39,7 @@ async function loadData() {
         advisoryData = await response.json();
 
         console.log(advisoryData);
+        console.log(Object.keys(advisoryData[0]));
 
         loadStates();
 
