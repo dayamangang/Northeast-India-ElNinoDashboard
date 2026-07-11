@@ -4,7 +4,7 @@
 //==========================================================
 
 const apiURL =
-"https://script.google.com/macros/s/AKfycbwk2TtKwzNSW50aJAFPrtB5MfJq62d-ijHlShWQMJ83zLfossaIh47rCqttrz3beG232w/exec";
+"https://script.google.com/macros/s/AKfycbxk062j8IyhbMQs082nWduVPzd51O33bzMLlHqAQK5OX_X30mgBIjZ5X3xxVlLGlm7U8w/exec";
 
 let advisoryData = [];
 
