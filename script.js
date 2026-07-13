@@ -198,5 +198,29 @@ function printPDF(){
 }
 
 //---------------------------------------------
+//---------------------------------------------
+// Visitor Counter
+//---------------------------------------------
 
+async function loadVisitorCount(){
+
+    try{
+
+        const response = await fetch(apiURL + "?action=visitor");
+
+        const data = await response.json();
+
+        document.getElementById("visitorCount").innerHTML =
+            data.visitors;
+
+    }
+
+    catch(error){
+
+        console.log(error);
+
+    }
+
+}
 loadData();
+loadVisitorCount();
