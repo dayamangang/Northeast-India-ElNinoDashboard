@@ -514,3 +514,30 @@ select{
     font-weight:600;
 
 }
+/*======================================
+ Visitor Counter
+=======================================*/
+
+.visitor-card{
+
+    background:#ffffff;
+
+    padding:15px;
+
+    margin-top:20px;
+
+    margin-bottom:20px;
+
+    border-radius:10px;
+
+    text-align:center;
+
+    font-size:18px;
+
+    font-weight:600;
+
+    color:#1B5E20;
+
+    box-shadow:0 3px 10px rgba(0,0,0,0.1);
+
+}
