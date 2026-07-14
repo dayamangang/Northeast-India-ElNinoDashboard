@@ -14,6 +14,8 @@ let advisoryData = [];
 
 const stateSelect = document.getElementById("state");
 const districtSelect = document.getElementById("district");
+const districtGroup = document.getElementById("districtGroup");
+const stateNotice = document.getElementById("stateNotice");
 
 const infoState = document.getElementById("infoState");
 const infoDistrict = document.getElementById("infoDistrict");
@@ -42,6 +44,8 @@ async function loadData() {
         console.log(Object.keys(advisoryData[0]));
 
         loadStates();
+        districtGroup.style.display = "block";
+        stateNotice.style.display = "none";
 
     }
 
@@ -99,22 +103,32 @@ stateSelect.addEventListener("change", function () {
 
     if(records.length === 0) return;
 
-    // State-level advisory
+    //===============================
+    // State-level Advisory
+    //===============================
+
     if(records[0].Advisory_Level === "State"){
 
-        districtSelect.innerHTML =
-            '<option>State-wide Advisory</option>';
+        // Hide district selection
+        districtGroup.style.display = "none";
 
-        districtSelect.disabled = true;
+        // Show information message
+        stateNotice.style.display = "block";
 
+        // Automatically display PDF
         displayRecord(records[0]);
 
         return;
 
     }
 
-    // District-level advisory
-    districtSelect.disabled = false;
+    //===============================
+    // District-level Advisory
+    //===============================
+
+    districtGroup.style.display = "block";
+
+    stateNotice.style.display = "none";
 
     records.sort((a,b)=>
         a.District.localeCompare(b.District)
@@ -122,8 +136,7 @@ stateSelect.addEventListener("change", function () {
 
     records.forEach(item=>{
 
-        const option =
-            document.createElement("option");
+        const option = document.createElement("option");
 
         option.value = item.District;
 
