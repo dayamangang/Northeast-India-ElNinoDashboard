@@ -91,21 +91,39 @@ function loadStates() {
 stateSelect.addEventListener("change", function () {
 
     districtSelect.innerHTML =
-    '<option value="">Select District</option>';
+        '<option value="">Select District</option>';
 
-    const districts =
-    advisoryData.filter(item =>
+    const records = advisoryData.filter(item =>
         item.State.trim() === this.value
     );
 
-    districts.sort((a,b)=>
+    if(records.length === 0) return;
+
+    // State-level advisory
+    if(records[0].Advisory_Level === "State"){
+
+        districtSelect.innerHTML =
+            '<option>State-wide Advisory</option>';
+
+        districtSelect.disabled = true;
+
+        displayRecord(records[0]);
+
+        return;
+
+    }
+
+    // District-level advisory
+    districtSelect.disabled = false;
+
+    records.sort((a,b)=>
         a.District.localeCompare(b.District)
     );
 
-    districts.forEach(item => {
+    records.forEach(item=>{
 
         const option =
-        document.createElement("option");
+            document.createElement("option");
 
         option.value = item.District;
 
@@ -116,26 +134,11 @@ stateSelect.addEventListener("change", function () {
     });
 
 });
-
 //---------------------------------------------
-// District Changed
+// Display Selected Record
 //---------------------------------------------
 
-districtSelect.addEventListener("change", function () {
-
-    const row =
-    advisoryData.find(item =>
-
-        item.State.trim() === stateSelect.value &&
-        item.District.trim() === districtSelect.value
-
-    );
-
-    if (!row) return;
-
-    //-----------------------------------------
-    // Information
-    //-----------------------------------------
+function displayRecord(row){
 
     infoState.innerHTML = row.State;
 
@@ -146,44 +149,46 @@ districtSelect.addEventListener("change", function () {
     const formattedDate = new Date(row.Issue_Date);
 
     issueDate.innerHTML = formattedDate.toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric"
+        day: "2-digit",
+        month: "long",
+        year: "numeric"
     });
 
     preparedBy.innerHTML = row.Prepared_By;
 
-    //-----------------------------------------
-    // Google Drive PDF
-    //-----------------------------------------
-
     const pdfURL = row.PDF_URL;
 
-    const fileID =
-    pdfURL.match(/\/d\/(.*?)\//)[1];
-
-    //-----------------------------------------
-    // Preview
-    //-----------------------------------------
+    const fileID = pdfURL.match(/\/d\/(.*?)\//)[1];
 
     pdfViewer.src =
-    "https://drive.google.com/file/d/" +
-    fileID +
-    "/preview";
-
-    //-----------------------------------------
-    // View
-    //-----------------------------------------
+        "https://drive.google.com/file/d/" +
+        fileID +
+        "/preview";
 
     viewBtn.href = pdfURL;
 
-    //-----------------------------------------
-    // Download
-    //-----------------------------------------
-
     downloadBtn.href =
-    "https://drive.google.com/uc?export=download&id=" +
-    fileID;
+        "https://drive.google.com/uc?export=download&id=" +
+        fileID;
+
+}
+
+//---------------------------------------------
+// District Changed
+//---------------------------------------------
+
+districtSelect.addEventListener("change", function () {
+
+    const row = advisoryData.find(item =>
+
+        item.State.trim() === stateSelect.value &&
+        item.District.trim() === districtSelect.value
+
+    );
+
+    if (!row) return;
+
+    displayRecord(row);
 
 });
 
