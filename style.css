@@ -120,8 +120,6 @@ header{
 
     gap:30px;
 
-    align-items:end;
-
     background:white;
 
     padding:30px;
@@ -130,7 +128,7 @@ header{
 
     box-shadow:0 8px 25px rgba(0,0,0,.08);
 
-    margin-bottom:30px;
+    margin-bottom:20px;
 
 }
 
@@ -165,6 +163,8 @@ select{
     font-size:16px;
 
     background:#fff;
+
+    cursor:pointer;
 
 }
 
@@ -309,7 +309,8 @@ header{
 
 .selection-panel{
 
-    grid-template-columns:1fr;
+   grid-template-columns:1fr;
+   gap:20px;
 
 }
 
