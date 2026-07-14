@@ -116,9 +116,11 @@ header{
 
     display:grid;
 
-    grid-template-columns:1fr 1fr;
+    grid-template-columns:repeat(2,minmax(300px,1fr));
 
-    gap:25px;
+    gap:30px;
+
+    align-items:end;
 
     background:white;
 
@@ -134,9 +136,7 @@ header{
 
 .input-group{
 
-    display:flex;
-
-    flex-direction:column;
+    width:100%;
 
 }
 
@@ -152,19 +152,19 @@ header{
 
 select{
 
-    padding:14px;
+    width:100%;
 
-    border:2px solid #d8e7da;
+    height:50px;
+
+    padding:0 15px;
+
+    border:2px solid #2E7D32;
 
     border-radius:10px;
 
     font-size:16px;
 
-    transition:.3s;
-
-    cursor:pointer;
-
-    background:white;
+    background:#fff;
 
 }
 
